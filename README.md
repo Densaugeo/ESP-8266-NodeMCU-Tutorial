@@ -15,8 +15,8 @@ You'll need a 3.3V serial connection. 5v serial risks damage the ESP-8266, so us
 
 If using a serial converter like mine, you will also need a separate 3.3V power supply for the ESP-8266. It requires more current than most serial converters will supply.
 
-Wiring:
-- Serial convert ground, ESP-8266 ground, and power supply ground should all be connected
+Wiring (pinouts for some ESP-8266 versions at https://github.com/esp8266/esp8266-wiki/wiki/Hardware_versions):
+- Serial converter ground, ESP-8266 ground, and power supply ground should all be connected
 - ESP-8266 3.3V to power supply 3.3V
 - ESP-8266 Tx and Rx to serial converter Rx and Rx. The labeling varies. For my converter, connect Tx to Rx and Rx to Tx. Connecting them backwards won't do any damage, so try both ways if unsure
 - ESP-8266 reset and chip enable to power supply 3.3V
