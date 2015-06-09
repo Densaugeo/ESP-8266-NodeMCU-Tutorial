@@ -78,7 +78,7 @@ Download the example script
 
 Connect an LED to GPIO 2. On my ESP-8266, this is pin 4 in NodeMCU, but this may vary from one device to another. You can test whether a pin number is correct by sending `gpio.mode(4, gpio.OUTPUT)` and `gpio.write(4, gpio.LOW)` or `gpio.write(4, gpio.HIGH)` or serial to control pin 4, for example. To use different pin numbers, edit the example script.
 
-Disconnect the serial monitor, then load the script and reboot
+Disconnect the serial monitor, then load the script and reboot. Loading a lua script is not flashing, and should be done in regular run mode (GPIO 0 not grounded)
 
     python luatool/luatool/luatool.py --port /dev/ttyUSB0 --src wifi_led.lua --dest init.lua --verbose -- restart
 
