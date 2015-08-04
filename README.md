@@ -24,7 +24,7 @@ Wiring (pinouts for some ESP-8266 versions at https://github.com/esp8266/esp8266
 
 Make sure to power on the serial converter BEFORE the ESP-8266 chip.
 
-ESP-8266 default baud rates can be  600, 19200, 57600, or 115200 depending on what firmware version they come with. Line ending may be CR, LF, or both.
+ESP-8266 default baud rates can be  9600, 19200, 57600, or 115200 depending on what firmware version they come with. Line ending may be CR, LF, or both.
 
 Power on the ESP-8266. It will print a message stating the current firmware version by serial.
 
