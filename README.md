@@ -18,7 +18,7 @@ If using a serial converter like mine, you will also need a separate 3.3V power 
 Wiring (pinouts for some ESP-8266 versions at https://github.com/esp8266/esp8266-wiki/wiki/Hardware_versions):
 - Serial converter ground, ESP-8266 ground, and power supply ground should all be connected
 - ESP-8266 3.3V to power supply 3.3V
-- ESP-8266 Tx and Rx to serial converter Rx and Rx. The labeling varies. For my converter, connect Tx to Rx and Rx to Tx. Connecting them backwards won't do any damage, so try both ways if unsure
+- ESP-8266 Tx and Rx to serial converter Tx and Rx. The labeling varies. For my converter, connect Tx to Rx and Rx to Tx. Connecting them backwards won't do any damage, so try both ways if unsure
 - ESP-8266 reset and chip enable to power supply 3.3V
 - Only when flashing firmware, connect ESP-8266 GPIO 0 to ground
 
@@ -38,9 +38,13 @@ First get the latest NodeMCU binary, available from https://github.com/nodemcu/n
 
     wget https://github.com/nodemcu/nodemcu-firmware/raw/master/pre_build/latest/nodemcu_latest.bin
 
+TODO: Document new NodeMCU location.build process
+
 Get the esptool Python-based flasher
 
     git clone https://github.com/themadinventor/esptool
+
+TODO: Esptool installation something something
 
 (Or navigate to https://github.com/themadinventor/esptool and download the .zip if you don't have Git.)
 
@@ -48,13 +52,15 @@ Connect GPIO 0 to gound and restart the ESP-8266 to enter flashing mode.
 
 Flash with esptool
 
-    sudo python esptool/esptool.py write_flash 0x00000 nodemcu_latest.bin --port /dev/ttyUSB0 --baud 9600
+    sudo python esptool/esptool.py --port /dev/ttyUSB0 --baud 9600 write_flash 0x00000 nodemcu_latest.bin
 
 Disconnect GPIO 0 from ground and restart to go back to run mode.
 
 With NodeMCU on the ESP-8266, it will run a lua interpreter, execute lua commands sent to it over serial. For full details, see NodeMCU's Github (https://github.com/nodemcu/nodemcu-firmware) or docs (http://www.nodemcu.com/docs/).
 
-For a more convenient way to copy lua files to the ESP-8266, get luatool
+The interpreter can be accessed over serial with 9600 baud rate and CR+LF line ending. To see it do something basic, run `print(2+2)`
+
+For a convenient way to copy lua files to the ESP-8266, get luatool
 
     git clone https://github.com/4refr0nt/luatool
 
