@@ -38,13 +38,11 @@ Once the serial connection is working, sending 'AT' to the ESP-8266 should get a
 
 ## Building NodeMCU ##
 
-TODO
+NodeMCU has a handy automatic building tool available here http://frightanic.com/nodemcu-custom-build/
 
-First get the latest NodeMCU binary, available from https://github.com/nodemcu/nodemcu-firmware
+The default options will work fine for this tutorial, and make sure to enter your e-mail address to receive the finished build. The build took about two minutes to run when I tried it.
 
-    wget https://github.com/nodemcu/nodemcu-firmware/raw/master/pre_build/latest/nodemcu_latest.bin
-
-TODO: Document new NodeMCU location.build process
+You'll get an e-mail with links to two files: an integer build and a float build. The integer build only supports integer numbers, the float build supports both integers and floating-point (decimal) numbers. I assume there is some performance advantage to the integer build, though I don't really know. I used the integer build here.
 
 ## Flashing with esptool
 
@@ -58,13 +56,15 @@ Connect GPIO 0 to gound and restart the ESP-8266 to enter flashing mode.
 
 Flash with esptool
 
-    sudo python esptool/esptool.py --port /dev/ttyUSB0 --baud 9600 write_flash 0x00000 nodemcu_latest.bin
+    sudo python esptool/esptool.py --port /dev/ttyUSB0 --baud 9600 write_flash 0x00000 your_nodemcu_binary.bin
 
-This is set to run rather slow to reduce the likelyhood of errors. It may take a few minutes to flash, during which you should see the ESP-8266 serial transmit LED flash every few seconds.
+using the .bin file the online builder e-mailed to you.
+
+This is set to run rather slow to reduce the likelyhood of errors. It may take a few minutes to flash (7 when I did it), during which you should see the ESP-8266 serial transmit LED flash every few seconds.
 
 After the esptool command exits, disconnect GPIO 0 from ground and restart to go back to run mode.
 
-With NodeMCU on the ESP-8266, it will run a lua interpreter, and execute lua commands sent to it over serial. For full details, see NodeMCU's Github (https://github.com/nodemcu/nodemcu-firmware) or docs (http://www.nodemcu.com/docs/).
+With NodeMCU on the ESP-8266, it will run a lua interpreter, and execute lua commands sent to it over serial. For full details, see NodeMCU's Github (https://github.com/nodemcu/nodemcu-firmware) or docs (http://www.nodemcu.com/docs/). When you first start it, it will print an error about not finding init.lua; this is normal and only means you haven't put an init.lua file in it yet.
 
 The interpreter can be accessed over serial with 9600 baud rate and CR+LF line ending. To see it do something basic, run `print(2+2)`
 
@@ -76,11 +76,7 @@ Fetch luatool from GitHub
 
     git clone https://github.com/4refr0nt/luatool
 
-Then disconnect the serial monitor, and run
-
-    python luatool/luatool/luatool.py --port /dev/ttyUSB0 --src your_lua_file.lua --dest your_lua_file.lua --verbose
-
-To load a new lua file as init.lua, which will run automatically when the ESP-8266 starts
+To load a new lua file as init.lua, which will run automatically when the ESP-8266 starts, disconnect the serial monitor and run
 
     python luatool/luatool/luatool.py --port /dev/ttyUSB0 --src your_lua_file.lua --dest init.lua --verbose
 
@@ -94,7 +90,7 @@ Download the example script
 
     wget https://raw.githubusercontent.com/Densaugeo/ESP-8266-NodeMCU-Tutorial/master/wifi_led.lua
 
-Connect an LED to GPIO 2. On my ESP-8266, this is pin 4 in NodeMCU, but this may vary from one device to another. You can test whether a pin number is correct by sending `gpio.mode(4, gpio.OUTPUT)` and `gpio.write(4, gpio.LOW)` or `gpio.write(4, gpio.HIGH)` or serial to control pin 4, for example. To use different pin numbers, edit the example script.
+Connect an LED to NodeMCU pin 4, which is usually GPIO 2 on the ESP-8266's labeling. You can test whether a pin number is correct by sending `gpio.mode(4, gpio.OUTPUT)` and `gpio.write(4, gpio.LOW)` or `gpio.write(4, gpio.HIGH)` or serial to control pin 4, for example. To use different pin numbers, edit the example script.
 
 Disconnect the serial monitor, then load the script and reboot. Loading a lua script is not flashing, and should be done in regular run mode (GPIO 0 not grounded)
 
