@@ -9,7 +9,7 @@ I'm working on linux, but these tools are cross-platform, so they may (or may no
 - A serial adapter
 - A level converter, if the serial adapter is not 3.3V
 
-## Establishing serial connection ##
+## Wiring the Serial Connection ##
 
 You'll need a 3.3V serial connection. 5v serial risks damage the ESP-8266, so use a 3.3V device or a level converter. I use SparkFun's 3.3V FTDI breakout (https://www.sparkfun.com/products/9873).
 
@@ -24,15 +24,21 @@ Wiring (pinouts for some ESP-8266 versions at https://github.com/esp8266/esp8266
 
 Make sure to power on the serial converter BEFORE the ESP-8266 chip.
 
+## Connecting to AT Firmware (optional) ##
+
+Most ESP-8266 chips come with firmware that responds to AT commands. Some come with other firmware. Some come with firmware that prints an error message and then does nothing else. If you want to try out the AT commands or see what firmware your chip came with, you can play 'find the serial settings':
+
 ESP-8266 default baud rates can be  9600, 19200, 57600, or 115200 depending on what firmware version they come with. Line ending may be CR, LF, or both.
 
-Power on the ESP-8266. It will print a message stating the current firmware version by serial.
+Power on the ESP-8266. It will print a message stating the current firmware version by serial. The message will be in plain text if your serial settings match, or random ascii characters if they don't.
 
 If the serial connection doesn't work, try checking /dev so see if a new tty device is added when plugging in the serial converter, and lsusb to check if a USB device is recognized. The Tx and Rx connections may need to be reversed.
 
 Once the serial connection is working, sending 'AT' to the ESP-8266 should get an 'OK' response. For a full list of AT commands see http://wiki.iteadstudio.com/ESP8266_Serial_WIFI_Module#AT_Commands
 
-## Flashing NodeMCU ##
+## Building NodeMCU ##
+
+TODO
 
 First get the latest NodeMCU binary, available from https://github.com/nodemcu/nodemcu-firmware
 
@@ -40,13 +46,13 @@ First get the latest NodeMCU binary, available from https://github.com/nodemcu/n
 
 TODO: Document new NodeMCU location.build process
 
+## Flashing with esptool
+
 Get the esptool Python-based flasher
 
     git clone https://github.com/themadinventor/esptool
-
-TODO: Esptool installation something something
-
-(Or navigate to https://github.com/themadinventor/esptool and download the .zip if you don't have Git.)
+    python esptool/setup.py build
+    sudo python esptool/setup.py install
 
 Connect GPIO 0 to gound and restart the ESP-8266 to enter flashing mode.
 
@@ -54,13 +60,19 @@ Flash with esptool
 
     sudo python esptool/esptool.py --port /dev/ttyUSB0 --baud 9600 write_flash 0x00000 nodemcu_latest.bin
 
-Disconnect GPIO 0 from ground and restart to go back to run mode.
+This is set to run rather slow to reduce the likelyhood of errors. It may take a few minutes to flash, during which you should see the ESP-8266 serial transmit LED flash every few seconds.
 
-With NodeMCU on the ESP-8266, it will run a lua interpreter, execute lua commands sent to it over serial. For full details, see NodeMCU's Github (https://github.com/nodemcu/nodemcu-firmware) or docs (http://www.nodemcu.com/docs/).
+After the esptool command exits, disconnect GPIO 0 from ground and restart to go back to run mode.
+
+With NodeMCU on the ESP-8266, it will run a lua interpreter, and execute lua commands sent to it over serial. For full details, see NodeMCU's Github (https://github.com/nodemcu/nodemcu-firmware) or docs (http://www.nodemcu.com/docs/).
 
 The interpreter can be accessed over serial with 9600 baud rate and CR+LF line ending. To see it do something basic, run `print(2+2)`
 
-For a convenient way to copy lua files to the ESP-8266, get luatool
+On startup, NodeMCU checks its internal memory for a file named init.lua and runs it if found. There are lua commands for writing this file without needing to reflash the firmware, and the luatool utility offers a streamlined way to do this.
+
+## Copy .lua Files With luatool ##
+
+Fetch luatool from GitHub
 
     git clone https://github.com/4refr0nt/luatool
 
